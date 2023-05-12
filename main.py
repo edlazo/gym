@@ -90,7 +90,7 @@ def buscar_usuario():
             if clases_restantes == 20:
                 clases_restantes -= 1
         
-        if not acceso or (usuario_encontrado['clases_restantes'] == 0 and usuario_encontrado['mensualidad'] != 5000):
+        if not acceso or (usuario_encontrado['clases_restantes'] == 0 and usuario_encontrado['membresia'] != 5000):
             print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nAcceso Denegado")
         else:
             if usuario_encontrado['clases_restantes'] != -1:
