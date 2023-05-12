@@ -91,15 +91,18 @@ def buscar_usuario():
                 clases_restantes -= 1
         
         if not acceso or (usuario_encontrado['clases_restantes'] == 0 and usuario_encontrado['membresia'] != 5000):
-            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nAcceso Denegado")
+            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes} \nAcceso Denegado")
         else:
             if usuario_encontrado['clases_restantes'] != -1:
                 usuario_encontrado['clases_restantes'] -= 1
                 print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nIngrese")
+            else:
+                print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes} \nIngrese")
                 
             # Guardamos la lista de usuarios en un archivo JSON
             with open("usuarios.json", "w") as archivo:
                 json.dump(usuarios, archivo)
+
 
 # Definimos una función para renovar la suscripción de un usuario
 def renovar_suscripcion():
@@ -144,6 +147,7 @@ def renovar_suscripcion():
         
         with open("usuarios.json", "w") as archivo:
             json.dump(usuarios, archivo)
+        
 
 
 def seleccion_opcion():
