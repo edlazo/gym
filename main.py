@@ -50,9 +50,9 @@ def mostrar_usuarios():
             vencimiento = datetime.datetime.strptime(usuario['vencimiento'], '%Y-%m-%d').date()
             
             if fecha_actual > vencimiento:
-                estado = "Mensualidad vencida"
+                estado = usuario['vencimiento'] + " Vencida"
             else:
-                estado = "Mensualidad activa"
+                estado = usuario['vencimiento'] + " Activa"
                 
             if usuario['clases_restantes'] == -1:
                 clases_restantes = "Clases ilimitadas"
@@ -77,34 +77,79 @@ def buscar_usuario():
         vencimiento = datetime.datetime.strptime(usuario_encontrado['vencimiento'], '%Y-%m-%d').date()
         
         if fecha_actual > vencimiento:
-            estado = f"Mensualidad vencida ({vencimiento.strftime('%d/%m/%Y')})"
+            estado = "Mensualidad vencida"
             acceso = False
         else:
-            estado = f"{vencimiento.strftime('%d/%m/%Y')}."
+            estado = usuario_encontrado['vencimiento']
             acceso = True
             
         if usuario_encontrado['clases_restantes'] == -1:
             clases_restantes = "Clases ilimitadas"
         else:
             clases_restantes = usuario_encontrado['clases_restantes']
-            
-        print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha vencimiento: {estado}, Membresía: {usuario_encontrado['membresia']}, Clases restantes: {clases_restantes}")
-        print("Ingrese")
+            if clases_restantes == 20:
+                clases_restantes -= 1
+        
         if not acceso or (usuario_encontrado['clases_restantes'] == 0 and usuario_encontrado['mensualidad'] != 5000):
-            print("Acceso denegado.")
+            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nAcceso Denegado")
         else:
             if usuario_encontrado['clases_restantes'] != -1:
                 usuario_encontrado['clases_restantes'] -= 1
+                print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nIngrese")
                 
             # Guardamos la lista de usuarios en un archivo JSON
             with open("usuarios.json", "w") as archivo:
                 json.dump(usuarios, archivo)
 
+# Definimos una función para renovar la suscripción de un usuario
+def renovar_suscripcion():
+    dni = input("Ingresa el DNI del usuario: ")
+    usuario_encontrado = None
+    
+    for usuario in usuarios:
+        if usuario['dni'] == dni:
+            usuario_encontrado = usuario
+    
+    if usuario_encontrado is None:
+        print("Usuario no encontrado.")
+    else:
+        fecha_vencimiento = datetime.datetime.strptime(usuario_encontrado['vencimiento'], '%Y-%m-%d')
+        fecha_nueva_vencimiento = fecha_vencimiento + datetime.timedelta(days=30)
+        
+        print("Elige una membresía:")
+        print("1. 10 clases por $3000")
+        print("2. 20 clases por $4500")
+        print("3. Clases ilimitadas por $5000")
+        opcion = input("Ingresa el número de la membresía que deseas: ")
+        
+        if opcion == "1":
+            clases_disponibles = 10
+        elif opcion == "2":
+            clases_disponibles = 20
+        elif opcion == "3":
+            clases_disponibles = -1
+        else:
+            print("Opción inválida. La suscripción no se ha renovado.")
+            return
+        
+        usuario_encontrado['vencimiento'] = fecha_nueva_vencimiento.strftime('%Y-%m-%d')
+        usuario_encontrado['clases_restantes'] = clases_disponibles
+        
+        print(f"La suscripción del usuario {usuario_encontrado['nombre']} ha sido renovada.")
+        print(f"Nueva fecha de vencimiento: {usuario_encontrado['vencimiento']}")
+        if clases_disponibles == -1:
+            print("El usuario tiene clases ilimitadas.")
+        else:
+            print(f"El usuario tiene {clases_disponibles} clases disponibles.")
+        
+        with open("usuarios.json", "w") as archivo:
+            json.dump(usuarios, archivo)
+
 
 def seleccion_opcion():
-    print("Bienvenido que quieres hacer?")
+    print("Bienvenido al gym que quieres hacer?")
     while True:
-        opcion = int(input(print("1- Agregar usuario", "\n2- Mostrar usuario", "\n3- Buscar Usuario", "\n0- Salir")))
+        opcion = int(input(print("1- Agregar usuario", "\n2- Mostrar usuario", "\n3- Buscar Usuario", "\n4- Renovar Usuario", "\n0- Salir")))
 
         if opcion == 1:
             agregar_usuario()
@@ -112,11 +157,12 @@ def seleccion_opcion():
             mostrar_usuarios()
         elif opcion == 3:
             buscar_usuario()
+        elif opcion == 4:
+            renovar_suscripcion()
         elif opcion == 0:
             print("Adios!")
             break
         else:
             print("Porfavor selecione una opcion correcta")
-
 
 seleccion_opcion()
