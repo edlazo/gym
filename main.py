@@ -1,5 +1,6 @@
 import json
 import datetime
+import os
 
 # Creamos una lista vacía para almacenar los usuarios
 usuarios = []
@@ -69,6 +70,7 @@ def buscar_usuario():
     for usuario in usuarios:
         if usuario['dni'] == dni:
             usuario_encontrado = usuario
+            break
     
     if usuario_encontrado is None:
         print("Usuario no encontrado.")
@@ -95,9 +97,7 @@ def buscar_usuario():
         else:
             if usuario_encontrado['clases_restantes'] != -1:
                 usuario_encontrado['clases_restantes'] -= 1
-                print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nIngrese")
-            else:
-                print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes} \nIngrese")
+            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nIngrese")
                 
             # Guardamos la lista de usuarios en un archivo JSON
             with open("usuarios.json", "w") as archivo:
@@ -112,6 +112,7 @@ def renovar_suscripcion():
     for usuario in usuarios:
         if usuario['dni'] == dni:
             usuario_encontrado = usuario
+            break
     
     if usuario_encontrado is None:
         print("Usuario no encontrado.")
@@ -150,10 +151,10 @@ def renovar_suscripcion():
         
 
 
-def seleccion_opcion():
-    print("Bienvenido al gym que quieres hacer?")
+def menu():
     while True:
-        opcion = int(input(print("1- Agregar usuario", "\n2- Mostrar usuario", "\n3- Buscar Usuario", "\n4- Renovar Usuario", "\n0- Salir")))
+        print("Bienvenido al gimnasio", "\n1- Agregar nuevo usuario", "\n2- Mostrar lista de usuarios", "\n3- Buscar usuario", "\n4- Renovar suscripción", "\n0- Salir")
+        opcion = int(input("Elige una opcion..."))
 
         if opcion == 1:
             agregar_usuario()
@@ -164,9 +165,10 @@ def seleccion_opcion():
         elif opcion == 4:
             renovar_suscripcion()
         elif opcion == 0:
+            os.system('cls' if os.name == 'nt' else 'clear')
             print("Adios!")
             break
         else:
             print("Porfavor selecione una opcion correcta")
 
-seleccion_opcion()
+menu()
