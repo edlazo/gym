@@ -97,7 +97,7 @@ def buscar_usuario():
         else:
             if usuario_encontrado['clases_restantes'] != -1:
                 usuario_encontrado['clases_restantes'] -= 1
-            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {usuario_encontrado['clases_restantes']} \nIngrese")
+            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes} \nIngrese")
                 
             # Guardamos la lista de usuarios en un archivo JSON
             with open("usuarios.json", "w") as archivo:
