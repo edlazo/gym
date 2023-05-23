@@ -1,6 +1,7 @@
 import json
 import datetime
 import os
+import tkinter as tk
 
 # Creamos una lista vacía para almacenar los usuarios
 usuarios = []
@@ -89,15 +90,15 @@ def buscar_usuario():
             clases_restantes = "Clases ilimitadas"
         else:
             clases_restantes = usuario_encontrado['clases_restantes']
-            if clases_restantes == 20:
+            if clases_restantes != -1:
                 clases_restantes -= 1
         
         if not acceso or (usuario_encontrado['clases_restantes'] == 0 and usuario_encontrado['membresia'] != 5000):
-            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes} \nAcceso Denegado")
+            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes}\nAcceso Denegado")
         else:
             if usuario_encontrado['clases_restantes'] != -1:
                 usuario_encontrado['clases_restantes'] -= 1
-            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes} \nIngrese")
+            print(f"DNI: {usuario_encontrado['dni']}, Nombre: {usuario_encontrado['nombre']}, Fecha de vencimiento: {estado}, Clases restantes: {clases_restantes}\nIngrese")
                 
             # Guardamos la lista de usuarios en un archivo JSON
             with open("usuarios.json", "w") as archivo:
@@ -149,22 +150,25 @@ def renovar_suscripcion():
         with open("usuarios.json", "w") as archivo:
             json.dump(usuarios, archivo)
         
-
-
 def menu():
     while True:
-        print("Bienvenido al gimnasio", "\n1- Agregar nuevo usuario", "\n2- Mostrar lista de usuarios", "\n3- Buscar usuario", "\n4- Renovar suscripción", "\n0- Salir")
-        opcion = int(input("Elige una opcion..."))
+        print("Bienvenido al gimnasio")
+        print("1- Buscar usuario")
+        print("2- Agregar nuevo usuario")
+        print("3- Mostrar lista de usuarios")
+        print("4- Renovar suscripción")
+        print("0- Salir")
+        opcion = input("Ingresa el número de opción deseada: ")
 
-        if opcion == 1:
-            agregar_usuario()
-        elif opcion == 2:
-            mostrar_usuarios()
-        elif opcion == 3:
+        if opcion == "1":
             buscar_usuario()
-        elif opcion == 4:
+        elif opcion == "2":
+            agregar_usuario()
+        elif opcion == "3":
+            mostrar_usuarios()
+        elif opcion == "4":
             renovar_suscripcion()
-        elif opcion == 0:
+        elif opcion == "0":
             os.system('cls' if os.name == 'nt' else 'clear')
             print("Adios!")
             break
